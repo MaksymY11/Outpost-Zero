@@ -55,14 +55,23 @@ public class Enemy : MonoBehaviour
         Destroy(gameObject); // Replace with logic for when enemies reach the end
     }
 
+
     public void TakeDamage(int damage)
     {
         health -= damage;
         if (health <= 0)
         {
+            DropScrap(); // Drop scrap on death
             Destroy(gameObject); // Destroy enemy on death
         }
     }
 
+    void DropScrap()
+    {
+        if (scrapPrefab != null)
+        {
+            Instantiate(scrapPrefab, transform.position, Quaternion.identity);
+        }
+    }
 }
 
