@@ -1,12 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GunController : MonoBehaviour
 {
     Animator anim;
     bool Running = false;
     bool Shooting = false;
+
+    public Slider heatGaugeSlider; // UI Display for gun overheat
+    public Image heatGaugeFill; // UI Display to show overheat increasing/decreasing per shot
 
     public GameObject laserPrefab; // Laser projectile prefab
     public Transform muzzle; // Muzzle position
@@ -44,6 +49,19 @@ public class GunController : MonoBehaviour
         if (!overheated)
         {
             currentHeat = Mathf.Max(0, currentHeat - heatDecayRate * Time.deltaTime);
+        }
+
+        // Update the heat gauge UI
+        if (heatGaugeSlider != null)
+        {
+            heatGaugeSlider.value = currentHeat / maxHeat; // Normalize value between 0 and 1
+
+            // Update slider color
+            if (heatGaugeFill != null)
+            {
+                Color color = Color.Lerp(Color.green, Color.red, currentHeat / maxHeat);
+                heatGaugeFill.color = color;
+            }
         }
 
         // Handle shooting
@@ -209,3 +227,4 @@ public class GunController : MonoBehaviour
         RunSound.Play();
     }
 }
+
